@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">GeoQuiz</string>
+    <string name="question_text">堪培拉是澳大利亚的首都。</string>
+    <string name="true_button">真</string>
+    <string name="false_button">假</string>
+    <string name="correct_toast">答对了</string>
+    <string name="incorrect_toast">答错了</string>
 </resources>
