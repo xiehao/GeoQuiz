@@ -24,6 +24,7 @@ public class QuizActivity extends AppCompatActivity {
             new Question(R.string.question_asia, true),
     };
     private Button mNextButton;
+    private Button mPreviousButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,15 @@ public class QuizActivity extends AppCompatActivity {
         };
         mQuestionTextView.setOnClickListener(listener);
         updateQuestion();
+
+        mPreviousButton = findViewById(R.id.previous_button);
+        mPreviousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurrentIndex = (mCurrentIndex - 1 + mQuestionBank.length) % mQuestionBank.length;
+                updateQuestion();
+            }
+        });
 
         mNextButton = findViewById(R.id.next_button);
         mNextButton.setOnClickListener(listener);

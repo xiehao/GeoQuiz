@@ -11,4 +11,5 @@
     <string name="correct_toast">答对了</string>
     <string name="incorrect_toast">答错了</string>
     <string name="next_button">下一题</string>
+    <string name="previous_button">上一题</string>
 </resources>
