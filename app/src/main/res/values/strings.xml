@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">GeoQuiz</string>
-    <string name="question_text">堪培拉是澳大利亚的首都。</string>
+    <string name="question_australia">堪培拉是澳大利亚的首都。</string>
+    <string name="question_oceans">太平洋比大西洋大。</string>
+    <string name="question_mideast">苏伊士运河连接红海与印度洋。</string>
+    <string name="question_africa">尼罗河的源头在埃及。</string>
+    <string name="question_americas">亚马逊河是美国最长的河流。</string>
+    <string name="question_asia">贝加尔湖是世界上最古老且最深的淡水湖。</string>
     <string name="true_button">真</string>
     <string name="false_button">假</string>
     <string name="correct_toast">答对了</string>
     <string name="incorrect_toast">答错了</string>
+    <string name="next_button">下一题</string>
 </resources>
