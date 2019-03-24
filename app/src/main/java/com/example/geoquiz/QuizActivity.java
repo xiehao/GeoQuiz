@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +24,8 @@ public class QuizActivity extends AppCompatActivity {
             new Question(R.string.question_americas, true),
             new Question(R.string.question_asia, true),
     };
-    private Button mNextButton;
-    private Button mPreviousButton;
+    private ImageButton mNextButton;
+    private ImageButton mPreviousButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
