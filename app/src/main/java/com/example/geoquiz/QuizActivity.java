@@ -15,10 +15,14 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final String KEY_NUMBER_ANSWERED = "number_answered";
+    private static final String KEY_NUMBER_CORRECT = "number_correct";
     private Button mTrueButton;
     private Button mFalseButton;
     private TextView mQuestionTextView;
     private int mCurrentIndex = 0;
+    private int mNumberAnswered = 0;
+    private int mNumberCorrect = 0;
     private Question[] mQuestionBank = Question.getQuestionBank();
     private ImageButton mNextButton;
     private ImageButton mPreviousButton;
@@ -32,6 +36,8 @@ public class QuizActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mNumberAnswered = savedInstanceState.getInt(KEY_NUMBER_ANSWERED, 0);
+            mNumberCorrect = savedInstanceState.getInt(KEY_NUMBER_CORRECT, 0);
         }
 
         mTrueButton = findViewById(R.id.true_button);
@@ -108,6 +114,8 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         Log.d(TAG, "onSaveInstanceState: 被调用。");
         outState.putInt(KEY_INDEX, mCurrentIndex);
+        outState.putInt(KEY_NUMBER_ANSWERED, mNumberAnswered);
+        outState.putInt(KEY_NUMBER_CORRECT, mNumberCorrect);
     }
 
     private void updateQuestion() {
@@ -123,6 +131,15 @@ public class QuizActivity extends AppCompatActivity {
         Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT).show();
         mQuestionBank[mCurrentIndex].setAnswered(true);
         updateButtonsState();
+        ++mNumberAnswered;
+        if (answerIsTrue == userPressedTrue) {
+            ++mNumberCorrect;
+        }
+        if (mNumberAnswered >= mQuestionBank.length) {
+            String result = "总分数为（满分100）：" +
+                    (double) mNumberCorrect / mQuestionBank.length * 100;
+            Toast.makeText(QuizActivity.this, result, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void updateButtonsState() {
