@@ -19,14 +19,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button mFalseButton;
     private TextView mQuestionTextView;
     private int mCurrentIndex = 0;
-    private Question[] mQuestionBank = new Question[] {
-            new Question(R.string.question_australia, true),
-            new Question(R.string.question_oceans, true),
-            new Question(R.string.question_mideast, false),
-            new Question(R.string.question_africa, false),
-            new Question(R.string.question_americas, true),
-            new Question(R.string.question_asia, true),
-    };
+    private Question[] mQuestionBank = Question.getQuestionBank();
     private ImageButton mNextButton;
     private ImageButton mPreviousButton;
 
@@ -120,6 +113,7 @@ public class QuizActivity extends AppCompatActivity {
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
+        updateButtonsState();
     }
 
     private void checkAnswer(boolean userPressedTrue) {
@@ -127,5 +121,17 @@ public class QuizActivity extends AppCompatActivity {
         int messageResId = (answerIsTrue == userPressedTrue) ?
                 R.string.correct_toast : R.string.incorrect_toast;
         Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT).show();
+        mQuestionBank[mCurrentIndex].setAnswered(true);
+        updateButtonsState();
+    }
+
+    private void updateButtonsState() {
+        if (mQuestionBank[mCurrentIndex].isAnswered()) {
+            mTrueButton.setEnabled(false);
+            mFalseButton.setEnabled(false);
+        } else {
+            mTrueButton.setEnabled(true);
+            mFalseButton.setEnabled(true);
+        }
     }
 }
