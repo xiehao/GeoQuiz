@@ -1,15 +1,16 @@
 package com.example.geoquiz;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -17,6 +18,7 @@ public class QuizActivity extends AppCompatActivity {
     private static final String KEY_INDEX = "index";
     private static final String KEY_NUMBER_ANSWERED = "number_answered";
     private static final String KEY_NUMBER_CORRECT = "number_correct";
+    private static final int REQUEST_CODE_CHEAT = 0;
     private Button mTrueButton;
     private Button mFalseButton;
     private TextView mQuestionTextView;
@@ -26,6 +28,8 @@ public class QuizActivity extends AppCompatActivity {
     private Question[] mQuestionBank = Question.getQuestionBank();
     private ImageButton mNextButton;
     private ImageButton mPreviousButton;
+    private Button mCheatButton;
+    private boolean mIsCheater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +81,16 @@ public class QuizActivity extends AppCompatActivity {
 
         mNextButton = findViewById(R.id.next_button);
         mNextButton.setOnClickListener(listener);
+
+        mCheatButton = findViewById(R.id.cheat_button);
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+                Intent intent = CheatActivity.newIntent(QuizActivity.this, answerIsTrue);
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
+            }
+        });
     }
 
     @Override
@@ -118,7 +132,21 @@ public class QuizActivity extends AppCompatActivity {
         outState.putInt(KEY_NUMBER_CORRECT, mNumberCorrect);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (RESULT_OK != resultCode) {
+            return;
+        }
+        if (REQUEST_CODE_CHEAT == requestCode) {
+            if (null == data) {
+                return;
+            }
+            mIsCheater = CheatActivity.wasAnswerShown(data);
+        }
+    }
+
     private void updateQuestion() {
+        mIsCheater = false;
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
         updateButtonsState();
@@ -126,13 +154,14 @@ public class QuizActivity extends AppCompatActivity {
 
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
-        int messageResId = (answerIsTrue == userPressedTrue) ?
-                R.string.correct_toast : R.string.incorrect_toast;
+        int messageResId = mIsCheater ? R.string.judgment_toast :
+                ((answerIsTrue == userPressedTrue) ?
+                        R.string.correct_toast : R.string.incorrect_toast);
         Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT).show();
         mQuestionBank[mCurrentIndex].setAnswered(true);
         updateButtonsState();
         ++mNumberAnswered;
-        if (answerIsTrue == userPressedTrue) {
+        if (answerIsTrue == userPressedTrue && !mIsCheater) {
             ++mNumberCorrect;
         }
         if (mNumberAnswered >= mQuestionBank.length) {
